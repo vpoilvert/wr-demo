@@ -1,0 +1,6 @@
+autopep8
+mypy
+pandas-stubs==1.2.0.39
+pip
+pre-commit
+pylint

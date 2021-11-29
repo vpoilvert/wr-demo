@@ -8,15 +8,16 @@ Dans cette première démo le but est de :
 from pathlib import Path
 
 import pandas as pd
+from numpy import dtype
 
 from wr_demo.raw_mapping import *
 
 
-def get_raw_file(file_type: FileType, year: int) -> Path:
+def get_raw_file(file_type: FileType, year: int = 2020) -> Path:
     return RAW_DIR / file_type.value / f'year={year}' / f'{file_type.value}.csv.gz'
 
 
-def get_source_file(file_type: FileType, year: int) -> Path:
+def get_source_file(file_type: FileType, year: int = 2020) -> Path:
     return SRC_DIR / file_type.value / f'year={year}' / f'{file_type.value}.snappy.parquet'
 
 
@@ -27,7 +28,8 @@ if __name__ == '__main__':
 
         source_df = transform_dataframe(file_type, raw_df)
         source_file = get_source_file(file_type, 2020)
-        source_file.parent.mkdir(parents=True)
+        source_file.parent.mkdir(parents=True, exist_ok=True)
+        source_file.unlink(missing_ok=True)
 
         source_df.to_parquet(source_file,
                              engine='pyarrow',

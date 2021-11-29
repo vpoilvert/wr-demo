@@ -11,9 +11,106 @@ BUCKET_NAME = 'wescale-pandas-demo'
 
 
 class FileType(Enum):
+    CARACTERISTIQUES = 'caracteristiques'
     USAGERS = 'usagers'
     VEHICULES = 'vehicules'
 
+
+CARACTERISTIQUES_CSV_TYPES = {
+    'Num_Acc': 'int64',
+    'jour':    'uint8',
+    'mois':    'uint8',
+    'an':      'uint16',
+    'hrmn':    'object',
+    'lum':     'uint8',
+    'dep':     'object',
+    'com':     'object',
+    'agg':     'uint8',
+    'int':     'int8',
+    'atm':     'int8',
+    'col':     'int8',
+    'adr':     'object',
+    'lat':     'object',
+    'long':    'object',
+
+}
+
+CARACTERISTIQUES_MAPPING_COLUMNS = {
+    'Num_Acc': 'id_accident',
+    'num_veh': 'num_vehicule',
+    'lum': 'lumiere',
+    'dep': 'departement',
+    'com': 'commune',
+    'agg': 'localisation',
+    'int': 'intersection',
+    'atm': 'conditions_atmospheriques',
+    'col': 'type_collision',
+    'adr': 'addresse',
+    'lat': 'latitude',
+    'long': 'longitude',
+}
+
+CARACTERISTIQUES_MAPPING_VALUES = {
+    'lumiere': {
+        1: 'plein jour',
+        2: 'crépuscule ou aube',
+        3: 'nuit sans éclairage public',
+        4: 'nuit avec éclairage public non allumé',
+        5: 'nuit avec éclairage public allumé',
+    },
+    'localisation': {
+        1: 'hors agglomération',
+        2: 'en agglomération',
+    },
+    'intersection': {
+        1: 'hors intersection',
+        2: 'intersection en x',
+        3: 'intersection en t',
+        4: 'intersection en y',
+        5: 'intersection à plus de 4 branches',
+        6: 'giratoire',
+        7: 'place',
+        8: 'passage à niveau',
+        9: 'autre intersection',
+    },
+    'conditions_atmospheriques': {
+        -1: 'non renseigné',
+        1: 'normale',
+        2: 'pluie légère',
+        3: 'pluie forte',
+        4: 'neige - grêle',
+        5: 'brouillard - fumée',
+        6: 'vent fort - tempête',
+        7: 'temps éblouissant',
+        8: 'temps couvert',
+        9: 'autre',
+    },
+    'type_collision': {
+        1: 'non renseigné',
+        1: 'deux véhicules - frontale',
+        2: 'deux véhicules - par l’arrière',
+        3: 'deux véhicules - par le coté',
+        4: 'trois véhicules et plus - en chaîne',
+        5: 'trois véhicules et plus - collisions multiples',
+        6: 'autre collision',
+        7: 'sans collision',
+    },
+}
+
+USAGERS_CSV_TYPES = {
+    'Num_Acc': 'int64',
+    'id_vehicule': 'string',
+    'num_veh': 'string',
+    'place': 'uint8',
+    'catu': 'uint8',
+    'grav': 'uint8',
+    'sexe': 'uint8',
+    'an_nais': 'uint16',
+    'trajet': 'int8',
+    'secu1': 'int8',
+    'secu2': 'int8',
+    'secu3': 'int8',
+}
 
 USAGERS_MAPPING_COLUMNS = {
     'Num_Acc': 'id_accident',
@@ -70,6 +167,20 @@ USAGERS_MAPPING_VALUES = {
     'equipement_securite_1': _MAPPING_EQUIPEMENT_SECURITE,
     'equipement_securite_2': _MAPPING_EQUIPEMENT_SECURITE,
     'equipement_securite_3': _MAPPING_EQUIPEMENT_SECURITE,
+}
+
+VEHICULES_CSV_TYPES = {
+    'Num_Acc': 'int64',
+    'id_vehicule': 'string',
+    'num_veh': 'string',
+    'senc': 'int8',
+    'catv': 'uint8',
+    'obs': 'int8',
+    'obsm': 'int8',
+    'choc': 'int8',
+    'manv': 'int8',
+    'motor': 'int8',
+    'occutc': 'float16',
 }
 
 VEHICULES_MAPPING_COLUMNS = {
@@ -151,12 +262,20 @@ VEHICULES_MAPPING_VALUES = {
     }
 }
 
+ALL_CSV_TYPES = {
+    FileType.CARACTERISTIQUES: CARACTERISTIQUES_CSV_TYPES,
+    FileType.USAGERS: USAGERS_CSV_TYPES,
+    FileType.VEHICULES: VEHICULES_CSV_TYPES,
+}
+
 ALL_MAPPING_COLUMNS = {
+    FileType.CARACTERISTIQUES: CARACTERISTIQUES_MAPPING_COLUMNS,
     FileType.USAGERS: USAGERS_MAPPING_COLUMNS,
     FileType.VEHICULES: VEHICULES_MAPPING_COLUMNS,
 }
 
 ALL_MAPPING_VALUES = {
+    FileType.CARACTERISTIQUES: CARACTERISTIQUES_MAPPING_VALUES,
     FileType.USAGERS: USAGERS_MAPPING_VALUES,
     FileType.VEHICULES: VEHICULES_MAPPING_VALUES,
 }
@@ -164,6 +283,18 @@ ALL_MAPPING_VALUES = {
 
 def transform_dataframe(file_type: FileType, raw_df: pd.DataFrame) -> pd.DataFrame:
     source_df = raw_df.rename(columns=ALL_MAPPING_COLUMNS[file_type])
+
+    if file_type is FileType.CARACTERISTIQUES:
+        source_df['date_accident'] = pd.to_datetime({
+            'year': source_df['an'],
+            'month': source_df['mois'],
+            'day': source_df['jour'],
+        }, errors='raise', unit='D', utc=True)
+        source_df['date_accident'] = source_df.apply(
+            lambda row: row.date_accident.date(), axis=1)
+        del source_df['an']
+        del source_df['mois']
+        del source_df['jour']
 
     for name, mapping in ALL_MAPPING_VALUES[file_type].items():
         source_df[name] = source_df[name].map(mapping)

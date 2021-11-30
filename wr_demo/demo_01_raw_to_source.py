@@ -8,7 +8,6 @@ Dans cette première démo le but est de :
 from pathlib import Path
 
 import pandas as pd
-from numpy import dtype
 
 from wr_demo.raw_mapping import *
 

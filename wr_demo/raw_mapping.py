@@ -12,6 +12,7 @@ BUCKET_NAME = 'wescale-pandas-demo'
 
 class FileType(Enum):
     CARACTERISTIQUES = 'caracteristiques'
+    LIEUX = 'lieux'
     USAGERS = 'usagers'
     VEHICULES = 'vehicules'
 
@@ -94,6 +95,123 @@ CARACTERISTIQUES_MAPPING_VALUES = {
         5: 'trois véhicules et plus - collisions multiples',
         6: 'autre collision',
         7: 'sans collision',
+    },
+}
+
+LIEUX_CSV_TYPES = {
+    'Num_Acc': 'int64',
+    'catr': 'uint8',
+    'voie': 'str',
+    'v1': 'int8',
+    'v2': 'str',
+    'circ': 'int8',
+    'nbv': 'int8',
+    'vosp': 'int8',
+    'prof': 'int8',
+    'pr': 'str',
+    'pr1': 'str',
+    'plan': 'int8',
+    'lartpc': 'str',
+    'larrout': 'str',
+    'surf': 'int8',
+    'infra': 'int8',
+    'situ': 'int8',
+    'vma': 'int16',
+}
+
+LIEUX_MAPPING_COLUMNS = {
+    'Num_Acc': 'id_accident',
+    'catr': 'categorie_route',
+    'voie': 'numero_route',
+    'circ': 'regime_circulation',
+    'nbv': 'nombre_voies_circulation',
+    'vosp': 'presence_voie_reservee',
+    'prof': 'profil_route',
+    'pr': 'numero_point_routier',
+    'pr1': 'distance_point_routier',
+    'plan': 'trace_en_plan',
+    'lartpc': 'largeur_terre_plein_central',
+    'larrout': 'largeur_chaussee',
+    'surf': 'etat_surface',
+    'infra': 'amenagement_infrastructure',
+    'situ': 'situation_accident',
+    'vma': 'vitesse_max_autorisee',
+}
+
+LIEUX_MAPPING_VALUES = {
+    'categorie_route': {
+        1: 'autoroute',
+        2: 'route nationale',
+        3: 'route départementale',
+        4: 'voie communales',
+        5: 'hors réseau public',
+        6: 'parc de stationnement ouvert à la circulation publique',
+        7: 'routes de métropole urbaine',
+        9: 'autre',
+    },
+    'regime_circulation': {
+        -1: 'non renseigné',
+        1: 'a sens unique',
+        2: 'bidirectionnelle',
+        3: 'a chaussées séparées',
+        4: 'avec voies d’affectation variable',
+    },
+    'presence_voie_reservee': {
+        -1: 'non renseigné',
+        0: 'sans objet',
+        1: 'piste cyclable',
+        2: 'bande cyclable',
+        3: 'voie réservée',
+    },
+    'profil_route': {
+        -1: 'non renseigné',
+        1: 'plat',
+        2: 'pente',
+        3: 'sommet de côte',
+        4: 'bas de côte',
+    },
+    'trace_en_plan': {
+        -1: 'non renseigné',
+        1: 'partie rectiligne',
+        2: 'en courbe à gauche',
+        3: 'en courbe à droite',
+        4: 'en « s »',
+    },
+    'etat_surface': {
+        -1: 'non renseigné',
+        1: 'normale',
+        2: 'mouillée',
+        3: 'flaques',
+        4: 'inondée',
+        5: 'enneigée',
+        6: 'boue',
+        7: 'verglacée',
+        8: 'corps gras – huile',
+        9: 'autre',
+    },
+    'amenagement_infrastructure': {
+        -1: 'non renseigné',
+        0: 'aucun',
+        1: 'souterrain - tunnel',
+        2: 'pont - autopont',
+        3: 'bretelle d’échangeur ou de raccordement',
+        4: 'voie ferrée',
+        5: 'carrefour aménagé',
+        6: 'zone piétonne',
+        7: 'zone de péage',
+        8: 'chantier',
+        9: 'autres',
+    },
+    'situation_accident': {
+        -1: 'non renseigné',
+        0: 'aucun',
+        1: 'sur chaussée',
+        2: 'sur bande d’arrêt d’urgence',
+        3: 'sur accotement',
+        4: 'sur trottoir',
+        5: 'sur piste cyclable',
+        6: 'sur autre voie spéciale',
+        8: 'autres',
     },
 }
 
@@ -264,18 +382,21 @@ VEHICULES_MAPPING_VALUES = {
 
 ALL_CSV_TYPES = {
     FileType.CARACTERISTIQUES: CARACTERISTIQUES_CSV_TYPES,
+    FileType.LIEUX: LIEUX_CSV_TYPES,
     FileType.USAGERS: USAGERS_CSV_TYPES,
     FileType.VEHICULES: VEHICULES_CSV_TYPES,
 }
 
 ALL_MAPPING_COLUMNS = {
     FileType.CARACTERISTIQUES: CARACTERISTIQUES_MAPPING_COLUMNS,
+    FileType.LIEUX: LIEUX_MAPPING_COLUMNS,
     FileType.USAGERS: USAGERS_MAPPING_COLUMNS,
     FileType.VEHICULES: VEHICULES_MAPPING_COLUMNS,
 }
 
 ALL_MAPPING_VALUES = {
     FileType.CARACTERISTIQUES: CARACTERISTIQUES_MAPPING_VALUES,
+    FileType.LIEUX: LIEUX_MAPPING_VALUES,
     FileType.USAGERS: USAGERS_MAPPING_VALUES,
     FileType.VEHICULES: VEHICULES_MAPPING_VALUES,
 }

@@ -17,12 +17,17 @@ def get_source_file(file_type: FileType, year: int) -> Path:
 
 if __name__ == '__main__':
     source_file = get_source_file(FileType.VEHICULES, 2020)
+
+    # read source file
     df = pd.read_parquet(source_file, engine='pyarrow')
 
-    df = df[df['categorie'] == 'bicyclette']
-    df = df[df['obstacle_fixe_heurte'] != 'non renseigné']
-    df = df[['id_accident', 'obstacle_fixe_heurte']]
-    result = df.groupby('obstacle_fixe_heurte').count(
-    ).sort_values(by='id_accident', ascending=False)
+    # categorie = bicyclette
 
+    # obstacle_fixe_heurte != non renseigné
+
+    # ['id_accident', 'obstacle_fixe_heurte']
+
+    # group by obstacle_fixe_heurte, count, sort by id_accident desc
+
+    result = df
     print(result.head(20))

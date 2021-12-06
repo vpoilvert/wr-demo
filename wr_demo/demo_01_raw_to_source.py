@@ -21,16 +21,14 @@ def get_source_file(file_type: FileType, year: int = 2020) -> Path:
 
 
 if __name__ == '__main__':
-    for file_type in FileType:
-        raw_file = get_raw_file(file_type, 2020)
-        raw_df = pd.read_csv(raw_file, sep=';')
+    file_type = FileType.VEHICULES
+    raw_file = get_raw_file(file_type, 2020)
+    source_file = get_source_file(file_type, 2020)
 
-        source_df = transform_dataframe(file_type, raw_df)
-        source_file = get_source_file(file_type, 2020)
-        source_file.parent.mkdir(parents=True, exist_ok=True)
-        source_file.unlink(missing_ok=True)
+    # read csv
 
-        source_df.to_parquet(source_file,
-                             engine='pyarrow',
-                             compression='snappy',
-                             )
+    # rename columns
+
+    # map values
+
+    # to parquet

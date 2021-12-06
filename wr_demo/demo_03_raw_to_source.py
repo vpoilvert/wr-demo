@@ -19,11 +19,15 @@ def get_source_file(file_type: FileType, year: int) -> str:
 
 
 if __name__ == '__main__':
-    for file_type in FileType:
-        raw_file = get_raw_file(file_type, 2020)
-        raw_df = wr.s3.read_csv(raw_file, sep=';')
+    file_type = FileType.VEHICULES
+    raw_file = get_raw_file(file_type, 2020)
+    source_file = get_source_file(file_type, 2020)
 
-        source_df = transform_dataframe(file_type, cast(pd.DataFrame, raw_df))
+    # read csv
+    raw_df = wr.s3.read_csv(raw_file, sep=';')
 
-        source_file = get_source_file(file_type, 2020)
-        wr.s3.to_parquet(source_df, source_file, compression='snappy')
+    # rename columns
+
+    # map values
+
+    # to parquet

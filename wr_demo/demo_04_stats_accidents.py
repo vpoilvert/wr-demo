@@ -17,5 +17,5 @@ ORDER BY 2 DESC
 '''
 
 if __name__ == '__main__':
-    df = wr.athena.read_sql_query(QUERY, database='demo')
-    print(df)
+    # read sql query
+    pass

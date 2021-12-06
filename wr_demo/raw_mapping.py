@@ -298,7 +298,7 @@ VEHICULES_CSV_TYPES = {
     'choc': 'int8',
     'manv': 'int8',
     'motor': 'int8',
-    'occutc': 'float16',
+    'occutc': 'float32',
 }
 
 VEHICULES_MAPPING_COLUMNS = {

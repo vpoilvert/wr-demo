@@ -24,3 +24,4 @@ ls-source:
 .PHONY: clean
 clean:
 	rm -rf source/
+	aws s3 rm --recursive s3://wescale-pandas-demo/source/
